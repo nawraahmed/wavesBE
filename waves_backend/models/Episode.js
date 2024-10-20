@@ -7,6 +7,7 @@ const episodeSchema = new mongoose.Schema({
   duration: { type: Number },
   releaseDate: { type: Date },
   podcast: { type: mongoose.Schema.Types.ObjectId, ref: 'Podcast' },
+  thumbnail: { type: String, required: true },
   listens: { type: Number, default: 0 }, // Number of times this episode was played
   lastPlayedAt: { type: Date }
 })

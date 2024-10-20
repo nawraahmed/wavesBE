@@ -19,7 +19,10 @@ const podcastSchema = new Schema(
     thumbnail: {
       type: String
     },
-    genres: [String]
+    genre_ids: [String], // Changed from genres to genre_ids
+    language: { type: String }, // Added language attribute
+    total_episodes: { type: Number, default: 0 }, // Added total_episodes attribute
+    has_guest_interviews: { type: Boolean, default: false } // Added has_guest_interviews attribute
   },
   { timestamps: true }
 )
