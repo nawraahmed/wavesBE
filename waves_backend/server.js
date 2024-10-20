@@ -1,54 +1,31 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const bodyParser = require('body-parser');
+//Load Dep
+const express = require('express')
+const mongoose = require('mongoose')
+const axios = require('axios')
+const cors = require('cors')
 
-const app = express();
-app.use(bodyParser.json());
+//require and initalize dotenv
+require('dotenv').config()
 
-const SECRET_KEY = "GADUCKSBAHRIAN";
+//PORT conf
+const PORT = process.env.PORT
 
+//Initalize express
+const app = express()
 
-const users = [];
+app.use(cors())
+app.use(express.json())
 
+//Database Configuration
+const db = require('./config/db')
 
-const authenticateToken = (req, res, next) => {
-  const token = req.header('Authorization')?.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'Access denied!' });
+//listen on port
+app.listen(PORT, () => console.log(`running on port: ${PORT}`))
 
-  jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) return res.status(403).json({ message: 'Invalid token!' });
-    req.user = user;
-    next();
-  });
-};
+//import routes
+const authRouter = require('./routes/auth')
+const podcastRouter = require('./routes/podcast')
 
-// Route: Register User
-app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  users.push({ username, password: hashedPassword });
-  res.json({ message: 'User registered successfully!' });
-});
-
-// Route: Login User
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find(u => u.username === username);
-  if (!user) return res.status(400).json({ message: 'Invalid credentials!' });
-
-  const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) return res.status(400).json({ message: 'Invalid credentials!' });
-
-  const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-  res.json({ token });
-});
-
-// Protected Route: Get Profile
-app.get('/profile', authenticateToken, (req, res) => {
-  res.json({ message: `Welcome, ${req.user.username}!` });
-});
-
-// Start the Server
-const PORT = 4000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+//mount routes
+app.use('/auth', authRouter)
+app.use('/', podcastRouter)

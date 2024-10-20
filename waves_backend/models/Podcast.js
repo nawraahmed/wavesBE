@@ -5,24 +5,23 @@ const podcastSchema = new Schema(
   {
     externalId: {
       type: String,
-      required: true,
       unique: true
     },
     title: {
-      type: String,
-      required: true
+      type: String
     },
     description: {
-      type: String,
-      required: true
+      type: String
     },
     thumbnail: {
       type: String
     },
-    genre_ids: [String], // Changed from genres to genre_ids
-    language: { type: String }, // Added language attribute
-    total_episodes: { type: Number, default: 0 }, // Added total_episodes attribute
-    has_guest_interviews: { type: Boolean, default: false } // Added has_guest_interviews attribute
+    genre_ids: [Number],
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User', // Reference to User model
+      required: true
+    } // Store the ID of the user who added the podcast
   },
   { timestamps: true }
 )

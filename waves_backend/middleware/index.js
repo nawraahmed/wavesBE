@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const Ticket = require('../models/Ticket')
 require('dotenv').config()
 
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS)
@@ -45,7 +44,7 @@ const verifyToken = (req, res, next) => {
 const stripToken = (req, res, next) => {
   try {
     const token = req.headers['authorization'].split(' ')[1]
-    console.log("token ::" + token)
+    console.log('token ::' + token)
     if (token) {
       res.locals.token = token
       return next()

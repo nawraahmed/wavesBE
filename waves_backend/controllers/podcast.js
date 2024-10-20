@@ -1,22 +1,27 @@
-const axios = require('axios')
+// Import model
+const Podcast = require('../models/Podcast')
 
-const searchPodcasts = async (req, res) => {
+// Controller to add a podcast
+const addPodcast = async (req, res) => {
   try {
-    const { query } = req.query
-    const response = await axios.get(
-      `https://listen-api.listennotes.com/api/v2/search`,
-      {
-        params: { q: query },
-        headers: {
-          'X-ListenAPI-Key': process.env.LISTEN_NOTES_API_KEY
-        }
-      }
-    )
+    // Get the user ID from the authenticated request
+    const userId = req.user.id // Assuming you have a middleware that adds the user ID to req.user
 
-    res.json(response.data.results)
-  } catch (err) {
-    res.status(500).send('Error fetching podcasts')
+    // Create a new podcast object, including the user ID
+    const newPodcast = new Podcast({
+      ...req.body, // Spread the request body
+      user: userId // Add the user ID
+    })
+
+    // Save the podcast to the database
+    const savedPodcast = await newPodcast.save()
+
+    // Send back the saved podcast
+    res.status(201).send(savedPodcast)
+  } catch (error) {
+    console.error('Error adding podcast:', error)
+    res.status(500).send({ error: 'Failed to add podcast' })
   }
 }
 
-module.export = { searchPodcasts }
+module.exports = { addPodcast }
