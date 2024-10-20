@@ -1,54 +1,44 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const bodyParser = require('body-parser');
-
-const app = express();
-app.use(bodyParser.json());
-
-const SECRET_KEY = "GADUCKSBAHRIAN";
+//Load Dep
+const express = require('express')
+const mongoose = require('mongoose')
+const cors = require('cors')
+const logger = require('morgan')
 
 
-const users = [];
+
+//require and initalize dotenv
+require('dotenv').config()
+
+//PORT conf
+const PORT = process.env.PORT
 
 
-const authenticateToken = (req, res, next) => {
-  const token = req.header('Authorization')?.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'Access denied!' });
+//Initalize express
+const app = express()
+app.use(express.json())
 
-  jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) return res.status(403).json({ message: 'Invalid token!' });
-    req.user = user;
-    next();
-  });
-};
+// Middleware
+app.use(express.json())
+app.use(cors())
+app.use(logger('dev'))
 
-// Route: Register User
-app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  users.push({ username, password: hashedPassword });
-  res.json({ message: 'User registered successfully!' });
-});
+// Root Route
+app.get('/', (req, res) => {
+  res.send('Welcome to the  API!')
+})
 
-// Route: Login User
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find(u => u.username === username);
-  if (!user) return res.status(400).json({ message: 'Invalid credentials!' });
+// Enable CORS for specific origin
+app.use(cors({ origin: 'http://localhost:5173' })); // Allow requests from the frontend
 
-  const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) return res.status(400).json({ message: 'Invalid credentials!' });
 
-  const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-  res.json({ token });
-});
+//Database Configuration
+const db = require('./config/db')
 
-// Protected Route: Get Profile
-app.get('/profile', authenticateToken, (req, res) => {
-  res.json({ message: `Welcome, ${req.user.username}!` });
-});
+//listen on port
+app.listen(PORT, () => console.log(`running on port: ${PORT}`))
 
-// Start the Server
-const PORT = 4000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+//import routes
+const authRouter = require('./routes/AuthRouter')
+
+//mount routes
+app.use('/auth', authRouter)
