@@ -1,23 +1,28 @@
-// models/statsModel.js
+// models/StatsModel.js
 const mongoose = require('mongoose')
 
-const statsSchema = new mongoose.Schema({
-  podcastId: {
-    type: String,
-    required: true
+const statsSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    listens: [
+      {
+        episodeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Episode' },
+        timestamp: Date
+      }
+    ],
+    downloads: [
+      {
+        episodeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Episode' },
+        timestamp: Date
+      }
+    ]
   },
-  listens: {
-    type: Number,
-    default: 0
-  },
-  downloads: {
-    type: Number,
-    default: 0
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-})
+  { timestamps: true }
+)
 
-module.exports = mongoose.model('Stats', statsSchema)
+const StatsModel = mongoose.model('Stats', statsSchema)
+module.exports = StatsModel

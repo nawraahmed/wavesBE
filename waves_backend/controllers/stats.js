@@ -1,47 +1,39 @@
 // controllers/statsController.js
-const Stats = require('../models/Stats')
-const axios = require('axios')
+const StatsModel = require('../models/Stats')
 
-// Controller function to get podcast stats from MongoDB
-const getPodcastStats = async (req, res) => {
-  const { podcastId } = req.params
+// Get user stats
+exports.getUserStats = async (req, res) => {
+  const userId = req.user.id
   try {
-    const stats = await Stats.findOne({ podcastId })
-    if (!stats) {
-      return res.status(404).json({ message: 'Podcast stats not found' })
-    }
-    res.status(200).json(stats)
-  } catch (err) {
-    res
-      .status(500)
-      .json({ message: 'Error fetching podcast stats', error: err.message })
-  }
-}
-
-// Controller function to get audience data from ListenNotes API
-const getAudienceData = async (req, res) => {
-  const { podcastId } = req.params
-  try {
-    const response = await axios.get(
-      `https://listen-api.listennotes.com/api/v2/podcasts/${podcastId}/audience`,
-      {
-        headers: {
-          'X-ListenAPI-Key': process.env.LISTENNOTES_API_KEY // Use your ListenNotes API key from .env
-        }
-      }
+    const stats = await StatsModel.findOne({ userId }).populate(
+      'listens.episodeId downloads.episodeId'
     )
-    res.status(200).json(response.data)
+    if (!stats) {
+      return res.status(404).json({ message: 'No stats found for this user' })
+    }
+    res.json(stats)
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: 'Error fetching audience data from ListenNotes',
-        error: error.message
-      })
+    console.error('Error fetching user stats:', error)
+    res.status(500).send('Server Error')
   }
 }
 
-module.exports = {
-  getPodcastStats,
-  getAudienceData
+// Update user stats (e.g., increment listens or downloads)
+exports.updateUserStats = async (req, res) => {
+  const { userId, episodeId, action } = req.body // action can be 'listen' or 'download'
+  try {
+    const update =
+      action === 'listen'
+        ? { $push: { listens: { episodeId, timestamp: new Date() } } }
+        : { $push: { downloads: { episodeId, timestamp: new Date() } } }
+
+    await StatsModel.findOneAndUpdate({ userId }, update, {
+      new: true,
+      upsert: true
+    })
+    res.status(200).json({ message: 'Stats updated successfully' })
+  } catch (error) {
+    console.error('Error updating user stats:', error)
+    res.status(500).send('Server Error')
+  }
 }

@@ -1,12 +1,11 @@
 // routes/statsRoutes.js
 const express = require('express')
-const { getPodcastStats, getAudienceData } = require('../controllers/stats')
+const { getUserStats, updateUserStats } = require('../controllers/stats')
+
 const router = express.Router()
 
-// Route to get podcast stats from MongoDB
-router.get('/stats/:podcastId', getPodcastStats)
-
-// Route to get audience data from ListenNotes
-router.get('/audience/:podcastId', getAudienceData)
+// Define the routes
+router.get('/:userId', getUserStats)
+router.post('/update', updateUserStats)
 
 module.exports = router
