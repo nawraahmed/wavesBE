@@ -25,7 +25,9 @@ app.listen(PORT, () => console.log(`running on port: ${PORT}`))
 //import routes
 const authRouter = require('./routes/auth')
 const podcastRouter = require('./routes/podcast')
+const favoriteRouter = require('./routes/favorite')
 
 //mount routes
 app.use('/auth', authRouter)
 app.use('/', podcastRouter)
+app.use('/', favoriteRouter)
