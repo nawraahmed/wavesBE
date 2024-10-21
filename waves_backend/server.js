@@ -4,11 +4,6 @@ const mongoose = require('mongoose')
 const axios = require('axios')
 const cors = require('cors')
 
-const authRouter = require('./routes/auth')
-const podcastRouter = require('./routes/podcast')
-const ProfileRouter = require('./routes/Profile');
-
-
 //require and initalize dotenv
 require('dotenv').config()
 
