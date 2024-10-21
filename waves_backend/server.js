@@ -29,7 +29,7 @@ app.listen(PORT, () => console.log(`Running on port: ${PORT}`));
 const authRouter = require('./routes/auth')
 const podcastRouter = require('./routes/podcast')
 const favoriteRouter = require('./routes/favorite')
-
+const ProfileRouter = require('./routes/Profile')
 
 //mount routes
 app.use('/auth', authRouter)
