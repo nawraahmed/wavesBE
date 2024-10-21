@@ -28,10 +28,17 @@ const db = require('./config/db')
 app.listen(PORT, () => console.log(`Running on port: ${PORT}`));
 
 
-// Use routers
-app.use('/api/auth', authRouter);
+
+
+//import routes
+const authRouter = require('./routes/auth')
+const podcastRouter = require('./routes/podcast')
+const favoriteRouter = require('./routes/favorite')
+
 
 //mount routes
 app.use('/auth', authRouter)
 app.use('/', podcastRouter)
 app.use('/profile', ProfileRouter);
+app.use('/', favoriteRouter)
+

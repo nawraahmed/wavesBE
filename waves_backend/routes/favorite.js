@@ -1,15 +1,14 @@
 const express = require('express')
-const router = express.Router()
-const { addPodcast, searchPodcasts } = require('../controllers/podcast')
+const { addFavorite } = require('../controllers/favorite')
 const middleware = require('../middleware/index')
 
+const router = express.Router()
+
 router.post(
-  '/addpodcast',
+  '/favorite',
   middleware.stripToken,
   middleware.verifyToken,
-  addPodcast
+  addFavorite
 )
-
-router.get('/search', searchPodcasts)
 
 module.exports = router
