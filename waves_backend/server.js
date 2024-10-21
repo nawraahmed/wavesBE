@@ -4,6 +4,11 @@ const mongoose = require('mongoose')
 const axios = require('axios')
 const cors = require('cors')
 
+const authRouter = require('./routes/auth')
+const podcastRouter = require('./routes/podcast')
+const ProfileRouter = require('./routes/Profile');
+
+
 //require and initalize dotenv
 require('dotenv').config()
 
@@ -20,12 +25,13 @@ app.use(express.json())
 const db = require('./config/db')
 
 //listen on port
-app.listen(PORT, () => console.log(`running on port: ${PORT}`))
+app.listen(PORT, () => console.log(`Running on port: ${PORT}`));
 
-//import routes
-const authRouter = require('./routes/auth')
-const podcastRouter = require('./routes/podcast')
+
+// Use routers
+app.use('/api/auth', authRouter);
 
 //mount routes
 app.use('/auth', authRouter)
 app.use('/', podcastRouter)
+app.use('/profile', ProfileRouter);
