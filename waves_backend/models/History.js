@@ -4,13 +4,19 @@ const { Schema } = mongoose
 
 const historySchema = new Schema(
   {
-    podcastId: { type: String, required: true },
-    episodeId: { type: String, required: true },
-    podcastTitle: { type: String, required: true },
-    episodeTitle: { type: String, required: true },
-    progress: { type: Number, required: true },
-    totalLength: { type: Number, required: true },
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    podcastId: {
+      type: String,
+      required: true
+    },
+    progress: {
+      type: Number,
+      default: 0 // Default progress is 0
+    }
   },
   { timestamps: true }
 )
