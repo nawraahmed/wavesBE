@@ -1,16 +1,11 @@
 const mongoose = require('mongoose')
 
 const favoriteSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Assuming you have a User model
-    required: true
-  },
-  podcastId: {
-    // Store the API ID here
-    type: String,
-    required: true
-  }
+  externalId: { type: String, required: true, unique: true },
+  title: { type: String, required: true },
+  description: { type: String },
+  thumbnail: { type: String },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 })
 
 const Favorite = mongoose.model('Favorite', favoriteSchema)

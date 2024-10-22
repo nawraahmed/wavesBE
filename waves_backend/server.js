@@ -28,6 +28,7 @@ const podcastRouter = require('./routes/podcast')
 const favoriteRouter = require('./routes/favorite')
 const statsRouter = require('./routes/stats')
 const ProfileRouter = require('./routes/Profile')
+const playlistRouter = require('./routes/playlist')
 
 //mount routes
 app.use('/auth', authRouter)
@@ -35,3 +36,4 @@ app.use('/', podcastRouter)
 app.use('/profile', ProfileRouter)
 app.use('/', favoriteRouter)
 app.use('/', statsRouter)
+app.use('/playlist', playlistRouter)
