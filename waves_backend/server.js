@@ -30,10 +30,12 @@ const authRouter = require('./routes/auth')
 const podcastRouter = require('./routes/podcast')
 const favoriteRouter = require('./routes/favorite')
 const ProfileRouter = require('./routes/Profile')
+const playlistRouter = require('./routes/playlist')
 
 //mount routes
 app.use('/auth', authRouter)
 app.use('/', podcastRouter)
 app.use('/profile', ProfileRouter);
 app.use('/', favoriteRouter)
+app.use('/playlist', playlistRouter)
 
