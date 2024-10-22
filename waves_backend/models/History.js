@@ -1,17 +1,18 @@
+// models/History.js
 const mongoose = require('mongoose')
+const { Schema } = mongoose
 
-const historySchema = new mongoose.Schema(
+const historySchema = new Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    episode: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Episode',
-      required: true
-    },
-    playedAt: { type: Date, default: Date.now }
+    podcastId: { type: String, required: true },
+    episodeId: { type: String, required: true },
+    podcastTitle: { type: String, required: true },
+    episodeTitle: { type: String, required: true },
+    progress: { type: Number, required: true },
+    totalLength: { type: Number, required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
   },
   { timestamps: true }
 )
 
-const History = mongoose.model('History', historySchema)
-module.exports = History
+module.exports = mongoose.model('History', historySchema)
