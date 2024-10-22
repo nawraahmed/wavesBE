@@ -1,31 +1,48 @@
 const axios = require('axios')
 const Podcast = require('../models/Podcast')
+const User = require('../models/User')
 
 // Controller to add a podcast
 const addPodcast = async (req, res) => {
   try {
-    // Get the user ID from the authenticated request
-    const userId = req.user.id // Assuming you have a middleware that adds the user ID to req.user
+    const userId = req.user.id
 
-    // Create a new podcast object, including the user ID
+    // Check if the podcast already exists
+    const existingPodcast = await Podcast.findOne({
+      externalId: req.body.externalId
+    })
+
+    if (existingPodcast) {
+      return res.status(409).send({ error: 'Podcast already exists.' }) // 409 Conflict
+    }
+
     const mappedPodcast = {
-      externalId: req.body.externalId, // Ensure you use the correct property from the request
-      title: req.body.title, // Adjust these according to the request body
+      externalId: req.body.externalId,
+      title: req.body.title,
       description: req.body.description,
       thumbnail: req.body.thumbnail,
       genre_ids: req.body.genre_ids,
-      user: userId // Add the user ID
+      user: userId
     }
 
+    console.log('Mapped podcast data:', mappedPodcast) // Log mapped podcast data
     const newPodcast = new Podcast(mappedPodcast)
-
-    // Save the podcast to the database
     const savedPodcast = await newPodcast.save()
 
-    // Send back the saved podcast
+    await User.findByIdAndUpdate(
+      userId,
+      { $push: { addedPodcasts: savedPodcast._id } }, // Use savedPodcast._id
+      { new: true }
+    )
+
     res.status(201).send(savedPodcast)
   } catch (error) {
     console.error('Error adding podcast:', error)
+    // Check for MongoDB duplicate key error
+    if (error.code === 11000) {
+      // MongoDB duplicate key error
+      return res.status(409).send({ error: 'Podcast already exists.' })
+    }
     res.status(500).send({ error: 'Failed to add podcast' })
   }
 }
