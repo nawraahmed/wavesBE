@@ -29,11 +29,17 @@ const favoriteRouter = require('./routes/favorite')
 // const statsRouter = require('./routes/stats')
 const historyRoutes = require('./routes/history')
 const ProfileRouter = require('./routes/Profile')
+const playlistRouter = require('./routes/playlist')
+const downloadRouter = require('./routes/download')
 
 //mount routes
 app.use('/auth', authRouter)
 app.use('/', podcastRouter)
 app.use('/profile', ProfileRouter)
 app.use('/', favoriteRouter)
+ Noor/history
 // app.use('/', statsRouter)
 app.use('/history', historyRoutes)
+app.use('/playlist', playlistRouter)
+app.use('/', downloadRouter)
+
