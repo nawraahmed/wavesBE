@@ -1,7 +1,7 @@
 const History = require('../models/History')
 const User = require('../models/User')
 
-// Save history
+// Save or update history
 const saveHistory = async (req, res) => {
   const {
     podcastId,
@@ -20,6 +20,11 @@ const saveHistory = async (req, res) => {
     if (history) {
       // Update the progress if history exists
       history.progress = progress
+
+      // If progress is complete, mark the episode as finished
+      if (progress >= totalLength) {
+        history.isFinished = true
+      }
     } else {
       // Create new history if not exists
       history = new History({
@@ -29,7 +34,8 @@ const saveHistory = async (req, res) => {
         episodeTitle,
         progress,
         totalLength,
-        userId
+        userId,
+        isFinished: progress >= totalLength // Mark finished if the episode is completed on first play
       })
     }
 
@@ -37,6 +43,7 @@ const saveHistory = async (req, res) => {
 
     // Add the history to the user's history list if not already added
     const user = await User.findById(userId)
+
     if (!user.history.includes(history._id)) {
       user.history.push(history._id)
       await user.save()
@@ -49,18 +56,6 @@ const saveHistory = async (req, res) => {
   }
 }
 
-// Fetch user's history
-const getHistory = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userId).populate('history')
-    res.status(200).json(user.history)
-  } catch (err) {
-    console.error('Error fetching history:', err)
-    res.status(500).json({ error: 'Server error' })
-  }
-}
-
 module.exports = {
-  saveHistory,
-  getHistory
+  saveHistory
 }

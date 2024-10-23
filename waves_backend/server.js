@@ -1,7 +1,5 @@
 //Load Dep
 const express = require('express')
-const mongoose = require('mongoose')
-const axios = require('axios')
 const cors = require('cors')
 
 //require and initalize dotenv
@@ -37,9 +35,8 @@ app.use('/auth', authRouter)
 app.use('/', podcastRouter)
 app.use('/profile', ProfileRouter)
 app.use('/', favoriteRouter)
- Noor/history
+
 // app.use('/', statsRouter)
 app.use('/history', historyRoutes)
 app.use('/playlist', playlistRouter)
 app.use('/', downloadRouter)
-

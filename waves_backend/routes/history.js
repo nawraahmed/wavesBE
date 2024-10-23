@@ -11,12 +11,4 @@ router.post(
   saveHistory
 )
 
-// GET /api/history/:userId - Fetch user's history
-router.get(
-  '/:userId',
-  middleware.stripToken,
-  middleware.verifyToken,
-  getHistory
-)
-
 module.exports = router

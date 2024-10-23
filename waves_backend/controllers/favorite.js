@@ -12,7 +12,7 @@ const addFavorite = async (req, res) => {
     })
     if (existingFavorite) {
       console.log('Podcast is already in favorites')
-      return res.status(400).send({ error: 'Podcast is already in favorites' })
+      return res.status(409).send({ error: 'Podcast is already in favorites' })
     }
 
     // Add the podcast to the user's favorites using the API ID

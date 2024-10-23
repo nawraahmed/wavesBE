@@ -9,6 +9,7 @@ const getProfile = async (req, res) => {
     const user = await User.findById(userId)
       .populate('favorites')
       .populate('addedPodcasts')
+      .populate('history')
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
