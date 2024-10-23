@@ -20,10 +20,7 @@ app.use(express.json())
 const db = require('./config/db')
 
 //listen on port
-app.listen(PORT, () => console.log(`Running on port: ${PORT}`));
-
-
-
+app.listen(PORT, () => console.log(`Running on port: ${PORT}`))
 
 //import routes
 const authRouter = require('./routes/auth')
@@ -31,11 +28,12 @@ const podcastRouter = require('./routes/podcast')
 const favoriteRouter = require('./routes/favorite')
 const ProfileRouter = require('./routes/Profile')
 const playlistRouter = require('./routes/playlist')
+const downloadRouter = require('./routes/download')
 
 //mount routes
 app.use('/auth', authRouter)
 app.use('/', podcastRouter)
-app.use('/profile', ProfileRouter);
+app.use('/profile', ProfileRouter)
 app.use('/', favoriteRouter)
 app.use('/playlist', playlistRouter)
-
+app.use('/', downloadRouter)
