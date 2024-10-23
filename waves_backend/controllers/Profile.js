@@ -1,5 +1,4 @@
 const User = require('../models/User')
-const Favorite = require('../models/Favorite') // Import your Favorite model
 
 const getProfile = async (req, res) => {
   try {
@@ -9,7 +8,7 @@ const getProfile = async (req, res) => {
     // Populate the favorites and addedPodcasts fields
     const user = await User.findById(userId)
       .populate('favorites')
-      .populate('addedPodcasts') // Populate the addedPodcasts field
+      .populate('addedPodcasts')
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
