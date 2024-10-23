@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const episodeSchema = new mongoose.Schema({
   title: { type: String },
   description: { type: String },
-  audioUrl: { type: String },
+  audioUrl: { type: String, required: true },
   duration: { type: Number },
   releaseDate: { type: Date },
   podcast: { type: mongoose.Schema.Types.ObjectId, ref: 'Podcast' },
